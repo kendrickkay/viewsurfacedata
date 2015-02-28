@@ -17,12 +17,22 @@ num = size(m,1);
 % do it
 f = zeros(1,num+1);
 f(1:2) = m(1,:);
+m(1,:) = [];  % remove
 cnt = 3;
 while cnt <= num+1
   found = find(m(:,1)==f(cnt-1));
-  assert(isscalar(found));
-  f(cnt) = m(found,2);
-  cnt = cnt + 1;
+  if isempty(found)
+    found = find(m(:,2)==f(cnt-1));
+    assert(isscalar(found));
+    f(cnt) = m(found,1);
+    m(found,:) = [];  % remove
+    cnt = cnt + 1;
+  else
+    assert(isscalar(found));
+    f(cnt) = m(found,2);
+    m(found,:) = [];  % remove
+    cnt = cnt + 1;
+  end
 end
 
 % check that circularity was achieved
