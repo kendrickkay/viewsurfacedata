@@ -3,7 +3,7 @@
 # perl findfaceintersections_helper.pl file.dat
 #
 # file.dat is a binary file in double format.
-# we overwrite file.dat with the answer.
+# we print the answer to stdout.
 #
 # see findfaceintersections.m for more details.
 #
@@ -62,8 +62,8 @@ foreach (keys(%{$connections})) {
   }
 }
 
-# define output
-my $output;
+## define output
+#my $output;
 
 # search for components
 my $keys;
@@ -89,18 +89,21 @@ while (scalar(@{$keys = [keys(%{$connections})]}) != 0) {
   }
   
   # output
-  $output .= pack("d*",scalar(@{$polygon}));
+  print scalar(@{$polygon});
+  print " ";
   for (my $p=0;$p<scalar(@{$polygon});$p++) {
-    $output .= pack("d*",$interps->{$polygon->[$p]});
-    $output .= pack("d*",split(/\//,$polygon->[$p]));
+    print $interps->{$polygon->[$p]};
+    print " ";
+    print join(' ',split(/\//,$polygon->[$p]));
+    print " ";
   }
 }
 
 # write output
-open(FILE,">$file");
-binmode(FILE);
-syswrite(FILE,$output);
-close(FILE);
+#open(FILE,">$file");
+#binmode(FILE);
+#syswrite(FILE,$output);
+#close(FILE);
 
 ########################
 
