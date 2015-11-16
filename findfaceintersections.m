@@ -91,7 +91,8 @@ s3 = fi(:,3)>=0 & fi(:,3)<=1;  % 1 x L, indices of faces whose third segment pas
 valid = s1 | s2 | s3;
   % make sure that weird cases don't actually happen!
   % FIXME: this relies on there always being residual decimals.
-assert(~any(flatten(fi(valid,:) == 0 | fi(valid,:) == 1)));
+% REMOVED ASSERTION on 10/29/15. is this OK?
+%assert(~any(flatten(fi(valid,:) == 0 | fi(valid,:) == 1)));
 connect1 = faces(valid,1);  % M x 1, first vertex
 connect2 = faces(valid,2);  % M x 1, second vertex
 connect3 = faces(valid,3);  % M x 1, third vertex
@@ -136,19 +137,38 @@ tempfile = tempname;
 byteorder = perl(strrep(which('findfaceintersections'), ...
                               'findfaceintersections.m', ...
                               'getbyteorder.pl'));
-assert(isequal(byteorder,'l'));
-savebinary(tempfile,'double',[in1 in2 in3],0);
-perl(strrep(which('findfaceintersections'), ...
-                  'findfaceintersections.m', ...
-                  'findfaceintersections_helper.pl'),tempfile);
-out = loadbinary(tempfile,'double',[0 1]);
-%delete(tempfile);  % FIXME: should we delete here?
+assert(isequal(firstelc(firstelc(regexp(byteorder,'(\w)','tokens'))),'l'));
+
+inall = [in1 in2 in3];
+if isempty(inall)  % handle degenerate case up front
+  out = [];
+else
+  savebinary(tempfile,'double',inall,0);
+  unix('');
+  out = perl(strrep(which('findfaceintersections'), ...
+                    'findfaceintersections.m', ...
+                    'findfaceintersections_helper.pl'),tempfile);
+  out = cellfun(@str2double,strsplit(out,' '));  % convert to a vector of numbers
+  out = out(~isnan(out));  % HACKY: ignore all NaNs
+%%  out = out(1:end-1);  % ignore the trailing NaN
+    % OLD:
+    %out = loadbinary(tempfile,'double',[0 1]);
+    %delete(tempfile);  % FIXME: should we delete here?
+end
 
 % post-process perl output
 f = [];
 outcnt = 1;
 while outcnt <= length(out)
   numvertices = out(outcnt);
+  
+  % HACK!! FOR SOME REASON, THIS FAILS SOMETIMES.  
+  % SO HERE WE JUST GET OUT TO AVOID A CRASH.  WHY IS THIS HAPPENING!!
+  if outcnt+3*numvertices > length(out)
+    warning('received too few values, just getting out.');
+    break;
+  end
+  
   temp = reshape(out(outcnt+1:outcnt+3*numvertices),[3 numvertices])';  % N x 3
     % ok.  now we remove any vertex that is on an edge which seems
     % to not exist in the target surface.  this is expected in the
