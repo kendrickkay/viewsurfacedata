@@ -1010,22 +1010,22 @@ case 1
   case 'off'
     fprintf(1,'\nselection left unchanged since draw mode is ''off''.\n');
   case 'draw'
-    prev = count(handles.epiclicked{sval}(dindices));
+    prev = sum(handles.epiclicked{sval}(dindices));
     if ~all(handles.epiclicked{sval}(dindices))
       handles.epiclicked{sval}(dindices) = 1;
       handles.clickedchanged{sval} = 1;
       handles.draworderchanged = 1;
     end
-    cur = count(handles.epiclicked{sval}(dindices));
+    cur = sum(handles.epiclicked{sval}(dindices));
     fprintf(1,'\n%d voxels selected; %d voxels were already selected\n',cur-prev,prev);
   case 'erase'
-    prev = count(~handles.epiclicked{sval}(dindices));
+    prev = sum(~handles.epiclicked{sval}(dindices));
     if ~all(~handles.epiclicked{sval}(dindices))
       handles.epiclicked{sval}(dindices) = 0;
       handles.clickedchanged{sval} = 1;
       handles.draworderchanged = 1;
     end
-    cur = count(~handles.epiclicked{sval}(dindices));
+    cur = sum(~handles.epiclicked{sval}(dindices));
     fprintf(1,'\n%d voxels unselected; %d voxels were already unselected\n',cur-prev,prev);
   end
 case 2
@@ -1033,22 +1033,22 @@ case 2
   case 'off'
     fprintf(1,'\nselection left unchanged since draw mode is ''off''.\n');
   case 'draw'
-    prev = count(handles.vclicked{sval}(goodv));
+    prev = sum(handles.vclicked{sval}(goodv));
     if ~all(handles.vclicked{sval}(goodv))
       handles.vclicked{sval}(goodv) = 1;
       handles.clickedchanged{sval} = 1;
       handles.draworderchanged = 1;
     end
-    cur = count(handles.vclicked{sval}(goodv));
+    cur = sum(handles.vclicked{sval}(goodv));
     fprintf(1,'\n%d vertices selected; %d vertices were already selected\n',cur-prev,prev);
   case 'erase'
-    prev = count(~handles.vclicked{sval}(goodv));
+    prev = sum(~handles.vclicked{sval}(goodv));
     if ~all(~handles.vclicked{sval}(goodv))
       handles.vclicked{sval}(goodv) = 0;
       handles.clickedchanged{sval} = 1;
       handles.draworderchanged = 1;
     end
-    cur = count(~handles.vclicked{sval}(goodv));
+    cur = sum(~handles.vclicked{sval}(goodv));
     fprintf(1,'\n%d vertices unselected; %d vertices were already unselected\n',cur-prev,prev);
   end
 end

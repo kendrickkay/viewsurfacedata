@@ -500,8 +500,8 @@ VS_TVNUM = size(VS_TXYZ,2);
 
 % report
 fprintf(1,'\nsome information:\n');
-fprintf(1,'reference: %d vertices, with %d isolated vertices.\n',VS_RVNUM,count(VS_RISOLATED));
-fprintf(1,'   target: %d vertices, with %d isolated vertices.\n',VS_TVNUM,count(VS_TISOLATED));
+fprintf(1,'reference: %d vertices, with %d isolated vertices.\n',VS_RVNUM,sum(VS_RISOLATED(:)));
+fprintf(1,'   target: %d vertices, with %d isolated vertices.\n',VS_TVNUM,sum(VS_TISOLATED(:)));
 fprintf(1,'reference: %d faces.\n',size(VS_RFACES,1));
 fprintf(1,'   target: %d faces.\n',size(VS_TFACES,1));
 if any(VS_TCOLORS>0)

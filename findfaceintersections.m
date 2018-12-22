@@ -148,7 +148,7 @@ else
   out = perl(strrep(which('findfaceintersections'), ...
                     'findfaceintersections.m', ...
                     'findfaceintersections_helper.pl'),tempfile);
-  out = cellfun(@str2double,strsplit(out,' '));  % convert to a vector of numbers
+  out = cellfun(@str2double,strsplitalt(out,' '));  % convert to a vector of numbers
   out = out(~isnan(out));  % HACKY: ignore all NaNs
 %%  out = out(1:end-1);  % ignore the trailing NaN
     % OLD:

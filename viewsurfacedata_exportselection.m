@@ -42,9 +42,9 @@ switch handles.surfacerecord{sval}.selectionmode
 case 1
   selection = handles.epiclicked{sval};
   fprintf(1,'fyi, there are %d selected voxels out of %d total data voxels.\n', ...
-          count(selection),numel(selection));
+          sum(selection(:)),numel(selection));
 case 2
   selection = handles.vclicked{sval};
   fprintf(1,'fyi, there are %d selected vertices out of %d total vertices.\n', ...
-          count(selection),length(selection));
+          sum(selection(:)),length(selection));
 end
