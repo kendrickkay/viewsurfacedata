@@ -125,6 +125,23 @@ if casenum==4
   vindices = vindices(~VS_TISOLATED(vindices));
 end
 
+% had to hack this in to get vertex normals. something changed in MATLAB to necessitate this.
+if casenum==1
+  set(pobj,    'Faces',faces,                    ...
+               'Vertices',vertices,              ...  % this is without the normalshift adjustment (to come later)
+               'VertexNormalsMode','auto');
+  htemp = light;
+  lighting gouraud;
+  pause(2);
+  drawnow;
+  % immediately deal with TNORMALS.  it is important this be done ASAP since other things depend on this information.
+  temp = unitlength(get(pobj,'VertexNormals'),2);  % N x 3
+  set(pobj,'VertexNormals',temp);
+  VS_TNORMALS = [temp'; ones(1,size(temp,1))];  % now 4 x N (so as to parallel VS_*XYZ)
+  %size(VS_TNORMALS)
+  delete(htemp);
+end
+
 if casenum==2 || casenum==3 || casenum==4
   % which faces are relevant
   temp = sum(ismember(VS_TFACES,vindices),2);
@@ -204,12 +221,12 @@ end
 if casenum==1
   set(pobj,    'Faces',faces,                    ...
                'Vertices',vertices,              ...  % this is without the normalshift adjustment (to come later)
-               'NormalMode','auto');
+               'VertexNormalsMode','auto');
 else
   set(pobj,    'Faces',faces,                    ...
                'Vertices',vertices,              ...  % this is without the normalshift adjustment (to come later)
                'VertexNormals',vertexnormals,    ...
-               'NormalMode','manual');
+               'VertexNormalsMode','auto');
 end
 set(pobj,    'FaceVertexCData',vertexdata(:),  ...
              'FaceVertexAlphaData',fvad(:),    ...

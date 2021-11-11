@@ -279,8 +279,10 @@ surface_Callback(handles.surface, eventdata, handles);
 selectionsurface_Callback(handles.selectionsurface, eventdata, handles);
 
 % set up figure linkage (the 0 is just a dummy value)
+%if 0
 set(handles.fig,'WindowButtonDownFcn', ...
     ['viewsurfacedata_gui(''selectionclick_Callback'',0,[],guidata(',num2str(hObject,64),'))']);  % HACK: can this be fixed?
+%end
 
 guidata(handles.output, handles);
 
@@ -1596,7 +1598,10 @@ else
   camproj(handles.ax,subscript(get(handles.projection,'String'),get(handles.projection,'Value'),1));
 end
 lighttype = subscript(get(handles.lighttype,'String'),get(handles.lighttype,'Value'),1);
-camlight(handles.lt,subscript(get(handles.lightpos,'String'),get(handles.lightpos,'Value'),1));
+temp = handles.lt;
+for zz=1:length(temp)
+  camlight(temp(zz),subscript(get(handles.lightpos,'String'),get(handles.lightpos,'Value'),1));
+end
 
 % deal with partial-volume voxels (needs to come after any camera changes!)
 % this is totally separate from the handling of the .surfs stuff.
